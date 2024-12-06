@@ -1,13 +1,13 @@
 # Audio Upload API
 
-Node.js API for uploading audio files.
+This is a Node.js API for uploading audio files.
 
 ## Table of Contents
 
 - [Prerequisites](#prerequisites)
 - [Getting Started](#getting-started)
-  - [Running the Docker Container](#running-the-docker-container)
-  - [Running Scripts from package.json](#running-scripts-from-packagejson)
+    - [Running the Docker Container](#running-the-docker-container)
+    - [Running Scripts from `package.json`](#running-scripts-from-packagejson)
 - [Deployment](#deployment)
 
 ## Prerequisites
@@ -33,7 +33,7 @@ Node.js API for uploading audio files.
 
    This will start the Node.js application inside the Docker container and map port 3000 on the host to port 3000 in the container.
 
-### Running Scripts from package.json
+### Running Scripts from `package.json`
 
 You can use the following scripts from the `package.json` file:
 
@@ -48,3 +48,13 @@ To run these scripts, simply use the `npm run <script-name>` command in your ter
 ## Deployment
 
 To deploy your application, you can push the Docker image to a container registry, such as Docker Hub, Amazon Elastic Container Registry (ECR), or Google Container Registry, and then configure your hosting platform (e.g., AWS Elastic Beanstalk, Google Cloud Run, Azure App Service) to pull the Docker image and manage the container lifecycle.
+
+Here's an example of how you can push your Docker image to Docker Hub:
+
+```bash
+docker login
+docker tag audio-upload-api ivan629/audio-upload-api:ivan629
+docker push ivan629/audio-upload-api:ivan629
+```
+
+In this example, replace `ivan629` with your Docker Hub username and `audio-upload-api` with the name of your repository.
