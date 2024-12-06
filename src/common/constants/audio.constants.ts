@@ -5,7 +5,7 @@ export const AUDIO_CONSTANTS = {
     MAX_FILE_SIZE: 10 * 1024 * 1024, // 10MB
     DEFAULT_STREAM_OPTIONS: {
         highWaterMark: 64 * 1024,
-        encoding: null,
+        encoding: 'utf16le',
         flags: 'r',
         autoClose: true,
         emitClose: true

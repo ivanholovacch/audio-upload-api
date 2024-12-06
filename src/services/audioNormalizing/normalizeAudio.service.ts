@@ -1,5 +1,3 @@
-import { promisify } from 'util';
-
 import path from 'path';
 import ffmpeg from 'fluent-ffmpeg';
 import { logger } from '../../common/utils/logger.utils';
@@ -37,7 +35,7 @@ export class AudioNormalizerService {
                 path: finalOutputPath,
                 format: AUDIO_CONSTANTS.SPEECH_RECOGNITION_FORMAT
             };
-        } catch (error) {
+        } catch (error: any) {
             logger.error('Audio conversion failed:', error);
             throw new Error(
                 `${AUDIO_CONSTANTS.ERRORS.CONVERSION_FAILED}: ${error.message}`
@@ -67,10 +65,6 @@ export class AudioNormalizerService {
         );
     }
 
-    /**
-     * Perform audio conversion using ffmpeg
-     * @private
-     */
     private static async performConversion(
         inputPath: string,
         outputPath: string
@@ -78,8 +72,8 @@ export class AudioNormalizerService {
         return new Promise((resolve, reject) => {
             ffmpeg(inputPath)
                 .toFormat(AUDIO_CONSTANTS.OUTPUT_FORMAT)
-                .outputOptions(AUDIO_CONSTANTS.FFMPEG_OPTIONS)
-                .audioFilters(AUDIO_CONSTANTS.AUDIO_FILTERS)
+                .outputOptions([...AUDIO_CONSTANTS.FFMPEG_OPTIONS])
+                .audioFilters([...AUDIO_CONSTANTS.AUDIO_FILTERS])
                 .on('start', (commandLine) => {
                     logger.info(`Starting conversion: ${commandLine}`);
                 })

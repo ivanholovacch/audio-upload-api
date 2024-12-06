@@ -25,7 +25,7 @@ class AudioFileReader {
             const buffer = await fs.readFile(filepath);
             logger.debug(`Successfully read file to buffer: ${filepath}`);
             return buffer;
-        } catch (error) {
+        } catch (error: any) {
             logger.error(`Error reading file to buffer: ${filepath}`, error);
             throw this.handleFileError(error, filepath);
         }
@@ -48,7 +48,7 @@ class AudioFileReader {
             const stream = createReadStream(filepath, streamOptions);
             logger.debug(`Created file stream for: ${filepath}`);
             return stream;
-        } catch (error) {
+        } catch (error: any) {
             logger.error(`Error creating file stream: ${filepath}`, error);
             throw this.handleFileError(error, filepath);
         }
@@ -115,7 +115,7 @@ class AudioFileReader {
 
             logger.debug(`Retrieved metadata for: ${filepath}`, metadata);
             return metadata;
-        } catch (error) {
+        } catch (error: any) {
             logger.error(`Error getting file metadata: ${filepath}`, error);
             throw this.handleFileError(error, filepath);
         }

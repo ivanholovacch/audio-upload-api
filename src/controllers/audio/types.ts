@@ -15,3 +15,22 @@ export interface ApiResponse<T> {
     error?: string;
     data?: T;
 }
+
+export type AudioMimeType = 'audio/ogg' | 'audio/wav' | 'audio/flac' | 'audio/mpeg' | 'audio/mp3';
+
+export type AudioEncoding = 'OGG_OPUS' | 'LINEAR16' | 'FLAC' | 'MP3';
+
+export type EncodingMap = {
+    [K in AudioMimeType]: AudioEncoding;
+};
+
+export const MIME_TYPES = {
+    ENCODING_MAP: {
+        'audio/ogg': 'OGG_OPUS',
+        'audio/wav': 'LINEAR16',
+        'audio/flac': 'FLAC',
+        'audio/mpeg': 'MP3',
+        'audio/mp3': 'MP3'
+    } as EncodingMap,
+    DEFAULT_ENCODING: 'MP3' as AudioEncoding
+} as const;

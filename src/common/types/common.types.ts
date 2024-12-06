@@ -9,7 +9,7 @@ export interface AudioFileMetadata {
 
 export interface StreamOptions {
     highWaterMark: number;
-    encoding: BufferEncoding | null;
+    encoding: BufferEncoding;
     flags?: string;
     mode?: number;
     autoClose?: boolean;

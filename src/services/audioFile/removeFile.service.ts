@@ -63,7 +63,7 @@ class AudioFileRemovalService {
                 success: true,
                 path: filepath
             };
-        } catch (error) {
+        } catch (error: any) {
             const errorMessage = `Failed to remove file ${filepath}: ${error.message}`;
             this.logger.error(errorMessage);
 
@@ -108,7 +108,7 @@ class AudioFileRemovalService {
             ).map(file => path.join(directory, file));
 
             return this.removeMultipleFiles(matchingFiles);
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(`Failed to remove files by pattern: ${error.message}`);
             throw new Error(`Directory operation failed: ${error.message}`);
         }
@@ -135,7 +135,7 @@ class AudioFileRemovalService {
             }
 
             return this.removeMultipleFiles(filesToRemove);
-        } catch (error) {
+        } catch (error: any) {
             this.logger.error(`Failed to remove old files: ${error.message}`);
             throw new Error(`Directory cleanup failed: ${error.message}`);
         }

@@ -5,16 +5,18 @@ import { parseBuffer } from 'music-metadata';
 import { validateMimeType } from '../../common/utils/mimeType.utils';
 import AudioFileService from '../../services/audioFile/saveFile.service';
 import { audioFileRemovalService } from '../../services/audioFile/removeFile.service';
-import AudioNormalizerService from '../../services/audioNormalizing/normalizeAudio.service';
 import GoogleSpeechService from '../../services/googleSpeachToText/googleSpeech.service';
 import { saveTranscribedText } from '../../services/audioFile/saveTranscription.service';
+import AudioNormalizerService from '../../services/audioNormalizing/normalizeAudio.service';
 import { handleAsyncError, createSuccessResponse, createErrorResponse } from '../../common/utils/response.utils';
 
+import { logger } from '../../common/utils/logger.utils';
 import { AUDIO_CONSTANTS } from '../../common/constants/audio.constants';
 import { MIME_TYPES } from '../../common/constants/mimeTypes.constants';
-import { AudioMetadata, ProcessedAudio } from './types';
-import { logger } from '../../common/utils/logger.utils';
+
 import AudioFileReader from "../../services/audioFile/readFile.service";
+import { AudioMetadata, ProcessedAudio, AudioEncoding, AudioMimeType } from './types';
+
 
 /**
  * Controller responsible for handling audio file operations and transcription
@@ -78,24 +80,28 @@ class AudioController {
      * @throws {Error} If file format is invalid
      */
     private async validateAudioFile(buffer: Buffer, filename: string): Promise<AudioMetadata> {
-        const mimeType = mime.lookup(filename);
+        const mimeType = mime.lookup(filename) || undefined;
 
-        if (!validateMimeType(mimeType)) {
+        // Explicitly check for valid mime type
+        if (!mimeType || !validateMimeType(mimeType)) {
             logger.error(`Invalid mime type for file: ${filename}`);
             throw new Error(AUDIO_CONSTANTS.ERRORS.INVALID_FORMAT);
         }
 
         try {
-            const metadata = await parseBuffer(buffer, { mimeType });
+            const metadata = await parseBuffer(buffer, { mimeType: mimeType });
 
             return {
                 encoding: this.getEncodingFromMimeType(mimeType),
                 sampleRate: metadata.format.sampleRate || AUDIO_CONSTANTS.DEFAULT_SAMPLE_RATE,
-                mimeType
+                mimeType: mimeType
             };
-        } catch (error) {
-            logger.error(`File validation failed for ${filename}: ${error.message}`);
-            throw new Error(`${AUDIO_CONSTANTS.ERRORS.VALIDATION_FAILED}: ${error.message}`);
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                logger.error(`File validation failed for ${filename}: ${error.message}`);
+                throw new Error(`${AUDIO_CONSTANTS.ERRORS.VALIDATION_FAILED}: ${error.message}`);
+            }
+            throw new Error(AUDIO_CONSTANTS.ERRORS.VALIDATION_FAILED);
         }
     }
 
@@ -123,7 +129,7 @@ class AudioController {
             await audioFileRemovalService.removeMultipleFiles([wavPath, filepath]);
 
             return { buffer: wavBuffer, path: wavPath };
-        } catch (error) {
+        } catch (error: any) {
             logger.error(`File processing failed for ${filename}: ${error.message}`);
             throw new Error(`${AUDIO_CONSTANTS.ERRORS.PROCESSING_FAILED}: ${error.message}`);
         }
@@ -133,10 +139,10 @@ class AudioController {
      * Get encoding type from MIME type
      * @private
      * @param {string} mimeType - MIME type of the audio file
-     * @returns {string} Corresponding encoding type
+     * @returns {AudioEncoding} Corresponding encoding type
      */
-    private getEncodingFromMimeType(mimeType: string): string {
-        return MIME_TYPES.ENCODING_MAP[mimeType] || MIME_TYPES.DEFAULT_ENCODING;
+    private getEncodingFromMimeType(mimeType: string): AudioEncoding {
+        return (MIME_TYPES.ENCODING_MAP[mimeType as AudioMimeType] || MIME_TYPES.DEFAULT_ENCODING);
     }
 }
 

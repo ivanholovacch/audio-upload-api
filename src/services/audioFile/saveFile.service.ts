@@ -3,7 +3,7 @@ import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import multer, { Multer, Options } from 'multer';
 import { AUDIO_CONSTANTS } from '../../common/constants/audio.constants';
-import { SavedFileResult } from './audioFile.types';
+import { AudioExtension, SavedFileResult } from './audioFile.types';
 import { logger } from '../../common/utils/logger.utils';
 import { validateBuffer } from '../../common/utils/validation.utils';
 import { createDirectory } from '../../common/utils/file.utils';
@@ -68,7 +68,7 @@ export class AudioFileService {
                 filename: fileInfo.filename,
                 extension: fileInfo.extension
             };
-        } catch (error) {
+        } catch (error: any) {
             logger.error('Error saving audio file:', error);
             throw new Error(
                 `${AUDIO_CONSTANTS.ERRORS.SAVE_FAILED}: ${error.message}`
@@ -99,13 +99,14 @@ export class AudioFileService {
      * @param {string} filename - Filename to validate
      * @throws {Error} If filename is invalid
      */
+
     private static async validateFileName(filename: string): Promise<void> {
         if (!filename || typeof filename !== 'string') {
             throw new Error(AUDIO_CONSTANTS.ERRORS.INVALID_FILENAME);
         }
+        const extension = path.extname(filename).toLowerCase();
 
-        const extension = path.extname(filename);
-        if (!AUDIO_CONSTANTS.ALLOWED_EXTENSIONS.includes(extension.toLowerCase())) {
+        if (!AUDIO_CONSTANTS.ALLOWED_EXTENSIONS.includes(extension as AudioExtension)) {
             throw new Error(AUDIO_CONSTANTS.ERRORS.INVALID_EXTENSION);
         }
     }

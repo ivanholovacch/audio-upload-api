@@ -1,16 +1,25 @@
 {
   "compilerOptions": {
-    "target": "ES2020",                      // Modern JavaScript features
-    "module": "CommonJS",                    // Node.js module system
-    "moduleResolution": "node",             // Resolve modules in Node.js style
-    "strict": true,                          // Enable strict type checking
-    "esModuleInterop": true,                 // Allow default imports from CommonJS modules
-    "resolveJsonModule": true,               // Support importing JSON files
-    "allowSyntheticDefaultImports": true,    // Allow `import` syntax for CommonJS
-    "skipLibCheck": true,                    // Skip type checking for library files
-    "outDir": "./dist",                      // Output directory for compiled files
-    "rootDir": "./src"                       // Root directory for source files
+    "target": "ES2020",
+    "module": "commonjs",
+    "lib": ["ES2020"],
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "strictBindCallApply": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "esModuleInterop": true
   },
-  "include": ["src/**/*.ts"],                // Include all TypeScript files in `src/`
-  "exclude": ["node_modules", "dist"]        // Exclude unnecessary folders
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
 }
