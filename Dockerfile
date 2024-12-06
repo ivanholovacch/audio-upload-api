@@ -10,6 +10,15 @@ COPY package*.json package-lock.json ./
 # Install the dependencies
 RUN npm ci
 
+# Install FFmpeg and audio-related dependencies
+RUN apt-get update && apt-get install -y \
+    ffmpeg \
+    libavcodec-dev \
+    libavformat-dev \
+    libavutil-dev \
+    libswresample-dev \
+    && rm -rf /var/lib/apt/lists/*
+
 # Copy the rest of the application code
 COPY . .
 
